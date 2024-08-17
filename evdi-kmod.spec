@@ -53,6 +53,11 @@ done
 export EL%{?rhel}FLAG="-DEL%{?rhel}"
 %endif
 
+# Catch any fork of Fedora
+%if 0%{?fedora}
+export CFLAG="-fno-pie"
+%endif
+
 for kernel_version in %{?kernel_versions}; do
     pushd _kmod_build_${kernel_version%%___*}/
         %make_build -C "${kernel_version##*___}" M=$(pwd) modules
@@ -68,6 +73,9 @@ done
 %{?akmod_install}
 
 %changelog
+* Sat Aug 17 2024 Lenus Walker <lenusiwalker@outlook.com> - 1.14.6-2
+- Added CFLAG="-fno-pie" to allow building on silverblue.
+
 * Thu Aug 15 2024 Simone Caronni <negativo17@gmail.com> - 1.14.6-2
 - Update to 1.14.6 final.
 
